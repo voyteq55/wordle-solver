@@ -57,4 +57,6 @@ class WordleSolver:
         self.window.setCentralWidget(main_widget)
         self.window.show()
 
+        letter_boxes.setFocus()
+
         sys.exit(self.app.exec())

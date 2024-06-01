@@ -17,3 +17,13 @@ class WordleGame(QWidget):
                 row.append(LetterBox())
             self.letter_boxes.append(row)
 
+    def keyPressEvent(self, event):
+        letter = str.lower(event.text())
+        if letter == chr(8) or letter == chr(127):  # backspace
+            if self.current_column > 0:
+                self.current_column -= 1
+                self.letter_boxes[self.current_row][self.current_column].setText("")
+        elif self.current_column < 5:
+            self.letter_boxes[self.current_row][self.current_column].setText(letter)
+            self.current_column += 1
+
