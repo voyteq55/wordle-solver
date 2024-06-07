@@ -17,6 +17,7 @@ class WordleGame(QWidget):
             for j in range(5):
                 row.append(LetterBox())
             self.letter_boxes.append(row)
+        self.update_boxes_clickability()
 
     def reset(self):
         self.current_column = 0
@@ -24,10 +25,18 @@ class WordleGame(QWidget):
         for row in self.letter_boxes:
             for box in row:
                 box.initialize()
+        self.update_boxes_clickability()
 
     def move_to_next_word(self):
         self.current_row += 1
         self.current_column = 0
+        self.update_boxes_clickability()
+
+    def update_boxes_clickability(self):
+        for row_i in range(6):
+            is_row_enabled = row_i == self.current_row
+            for box in self.letter_boxes[row_i]:
+                box.setEnabled(is_row_enabled)
 
     def get_word_if_valid(self) -> str | None:
         word = "".join(self.letter_boxes[self.current_row][i].text() for i in range(5))
