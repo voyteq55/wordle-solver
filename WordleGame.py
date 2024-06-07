@@ -8,7 +8,8 @@ from LetterBox import LetterBox
 class WordleGame(QWidget):
     def __init__(self, allowed_words):
         super().__init__()
-        self.allowed_letters = set(letter for word in allowed_words for letter in word)
+        self.allowed_letters = None
+        self.set_allowed_letters(allowed_words)
         self.current_column = 0
         self.current_row = 0
         self.letter_boxes: List[List[LetterBox]] = []
@@ -18,6 +19,9 @@ class WordleGame(QWidget):
                 row.append(LetterBox())
             self.letter_boxes.append(row)
         self.update_boxes_clickability()
+
+    def set_allowed_letters(self, allowed_words):
+        self.allowed_letters = set(letter for word in allowed_words for letter in word)
 
     def reset(self):
         self.current_column = 0

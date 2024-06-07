@@ -1,7 +1,7 @@
 import sys
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QGridLayout, QPushButton, QLabel, QWidget, QVBoxLayout, \
-    QMessageBox, QHBoxLayout, QListWidget, QListWidgetItem
+    QMessageBox, QHBoxLayout, QListWidget, QListWidgetItem, QFileDialog
 
 from SolutionOptimizer import SolutionOptimizer
 from WordleGame import WordleGame
@@ -57,6 +57,21 @@ class WordleSolver:
         self.solution_optimizer.set_possible_words()
         self.update_word_suggestions()
 
+    def import_words_from_file(self):
+        try:
+            file_dialog = QFileDialog(self.window)
+            file_dialog.setNameFilter("Text Files (*.txt);;All Files (*)")
+            file_dialog.setViewMode(QFileDialog.Detail)
+            file_path, _ = file_dialog.getOpenFileName(self.window, "Select File", "", "Text Files (*.txt);;All Files "
+                                                                                       "(*)")
+
+            self.load_allowed_words(file_path)
+            self.current_game.set_allowed_letters(self.allowed_words)
+            self.solution_optimizer.set_allowed_words(self.allowed_words)
+            self.reset()
+        except FileNotFoundError:
+            QMessageBox.information(self.current_game, "File Not Found", f"No valid file was selected")
+
     def setup_ui(self):
         self.window.setWindowTitle("Wordle Solver")
 
@@ -89,9 +104,13 @@ class WordleSolver:
         middle_pane = QWidget()
         middle_pane.setLayout(middle_pane_layout)
 
+        import_words_button = QPushButton("Import words from a file")
+        import_words_button.clicked.connect(self.import_words_from_file)
+
         right_pane_layout = QVBoxLayout()
         right_pane_layout.addWidget(QLabel("Best words"))
         right_pane_layout.addWidget(self.best_words_widget)
+        right_pane_layout.addWidget(import_words_button)
 
         right_pane = QWidget()
         right_pane.setLayout(right_pane_layout)

@@ -14,6 +14,11 @@ class SolutionOptimizer:
     def set_possible_words(self):
         self.possible_words_left = list(self.allowed_words)
 
+    def set_allowed_words(self, allowed_words: List[str]):
+        self.allowed_words = allowed_words
+        self.combination_solver.combination_dict = {}
+        self.combination_solver.setup_combination_dictionary(self.allowed_words)
+
     def eliminate_words(self, user_guess: str, result_combination: str) -> None:
         self.possible_words_left = [word for word in self.possible_words_left if
                                     self.combination_solver.get_result(user_guess, word) == result_combination]
