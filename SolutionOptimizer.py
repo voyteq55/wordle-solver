@@ -7,8 +7,12 @@ from CombinationSolver import CombinationSolver
 class SolutionOptimizer:
     def __init__(self, allowed_words: List[str]):
         self.allowed_words = allowed_words
-        self.possible_words_left = list(self.allowed_words)
+        self.possible_words_left = None
         self.combination_solver = CombinationSolver(allowed_words)
+        self.set_possible_words()
+
+    def set_possible_words(self):
+        self.possible_words_left = list(self.allowed_words)
 
     def eliminate_words(self, user_guess: str, result_combination: str) -> None:
         self.possible_words_left = [word for word in self.possible_words_left if

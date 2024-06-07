@@ -18,6 +18,13 @@ class WordleGame(QWidget):
                 row.append(LetterBox())
             self.letter_boxes.append(row)
 
+    def reset(self):
+        self.current_column = 0
+        self.current_row = 0
+        for row in self.letter_boxes:
+            for box in row:
+                box.initialize()
+
     def move_to_next_word(self):
         self.current_row += 1
         self.current_column = 0
@@ -30,7 +37,6 @@ class WordleGame(QWidget):
     def get_word_result(self) -> str:
         return "".join(self.letter_boxes[self.current_row][i].state for i in range(5))
 
-
     def keyPressEvent(self, event):
         letter = str.lower(event.text())
         if letter == chr(8) or letter == chr(127):  # backspace
@@ -40,4 +46,3 @@ class WordleGame(QWidget):
         elif self.current_column < 5 and self.current_row < 6 and letter in self.allowed_letters:
             self.letter_boxes[self.current_row][self.current_column].setText(letter)
             self.current_column += 1
-

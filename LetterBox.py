@@ -9,6 +9,10 @@ GREEN = "#79b851"
 class LetterBox(QLabel):
     def __init__(self):
         super().__init__()
+        self.state = None
+        self.initialize()
+
+    def initialize(self):
         self.setText("")
         self.setFixedSize(50, 50)
         self.state = "-"

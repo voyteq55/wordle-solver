@@ -52,12 +52,21 @@ class WordleSolver:
             item = QListWidgetItem(possible_word)
             self.possible_words_widget.addItem(item)
 
+    def reset(self):
+        self.current_game.reset()
+        self.solution_optimizer.set_possible_words()
+        self.update_word_suggestions()
+
     def setup_ui(self):
         self.window.setWindowTitle("Wordle Solver")
+
+        reset_button = QPushButton("Reset")
+        reset_button.clicked.connect(self.reset)
 
         left_pane_layout = QVBoxLayout()
         left_pane_layout.addWidget(self.possible_words_label)
         left_pane_layout.addWidget(self.possible_words_widget)
+        left_pane_layout.addWidget(reset_button)
 
         left_pane = QWidget()
         left_pane.setLayout(left_pane_layout)
