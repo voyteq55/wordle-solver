@@ -26,7 +26,12 @@ class WordleSolver:
 
     def load_allowed_words(self, words_file_path: str):
         with open(words_file_path) as file:
-            self.allowed_words = list(word.strip() for word in file.readlines())
+            new_allowed_words = []
+            for word in file.readlines():
+                if len(word.strip()) != 5:
+                    raise ValueError("File must contain only 5-letter words on each line")
+                new_allowed_words.append(word.strip())
+            self.allowed_words = new_allowed_words
 
     def update_game(self):
         self.current_game.setFocus()
@@ -62,15 +67,17 @@ class WordleSolver:
             file_dialog = QFileDialog(self.window)
             file_dialog.setNameFilter("Text Files (*.txt);;All Files (*)")
             file_dialog.setViewMode(QFileDialog.Detail)
-            file_path, _ = file_dialog.getOpenFileName(self.window, "Select File", "", "Text Files (*.txt);;All Files "
-                                                                                       "(*)")
-
+            file_path, _ = file_dialog.getOpenFileName(self.window, "Select File", "",
+                                                       "Text Files (*.txt);;All Files (*)")
             self.load_allowed_words(file_path)
             self.current_game.set_allowed_letters(self.allowed_words)
             self.solution_optimizer.set_allowed_words(self.allowed_words)
             self.reset()
         except FileNotFoundError:
-            QMessageBox.information(self.current_game, "File Not Found", f"No valid file was selected")
+            QMessageBox.information(self.current_game, "File Not Found", "No valid file was selected")
+        except ValueError:
+            QMessageBox.information(self.current_game, "Invalid file format",
+                                    "File format is invalid (it should only contain 5-letter words on each line")
 
     def setup_ui(self):
         self.window.setWindowTitle("Wordle Solver")
