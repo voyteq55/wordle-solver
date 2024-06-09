@@ -1,0 +1,3 @@
+WRONG = "-"
+MISPLACED = "^"
+CORRECT = "*"

@@ -10,7 +10,14 @@ POSSIBLE_WORDS_LABEL = "Possible words ({}):"
 
 
 class WordleSolver:
+    """
+    A main class responsible for connecting the user interface with the algorithmic logic
+    """
     def __init__(self, words_file_path: str):
+        """
+        Initializes the WordleSolver with the specified list of words allowed in the current game
+        :param words_file_path: path to the file which contains permitted words
+        """
         super().__init__()
         self.app = QApplication(sys.argv)
         self.window = QMainWindow()
@@ -24,7 +31,12 @@ class WordleSolver:
         self.solution_optimizer = SolutionOptimizer(self.allowed_words)
         self.update_word_suggestions()
 
-    def load_allowed_words(self, words_file_path: str):
+    def load_allowed_words(self, words_file_path: str) -> None:
+        """
+        Loads the list of allowed words from a file specified by its path into memory, raises an exception if the file
+        format is invalid
+        :param words_file_path: path to the file which contains permitted words
+        """
         with open(words_file_path) as file:
             new_allowed_words = []
             for word in file.readlines():
@@ -33,7 +45,10 @@ class WordleSolver:
                 new_allowed_words.append(word.strip())
             self.allowed_words = new_allowed_words
 
-    def update_game(self):
+    def update_game(self) -> None:
+        """
+        Updates the state to its next row, if the entered word is valid and allowed (included in the recognized words)
+        """
         self.current_game.setFocus()
         if entered_word := self.current_game.get_word_if_valid():
             if entered_word in self.allowed_words:
@@ -44,7 +59,10 @@ class WordleSolver:
             else:
                 QMessageBox.information(self.current_game, "Incorrect word", f"The word {entered_word} was not found")
 
-    def update_word_suggestions(self):
+    def update_word_suggestions(self) -> None:
+        """
+        Updates the widget list of possible and best words based on the current state of the game
+        """
         entropies = self.solution_optimizer.calculate_entropy_bits()
         self.best_words_widget.clear()
         for allowed_user_guess, entropy_bits in entropies:
@@ -57,12 +75,18 @@ class WordleSolver:
             item = QListWidgetItem(possible_word)
             self.possible_words_widget.addItem(item)
 
-    def reset(self):
+    def reset(self) -> None:
+        """
+        Resets the gameplay to its initial stage so that the user can start again
+        """
         self.current_game.reset()
         self.solution_optimizer.set_possible_words()
         self.update_word_suggestions()
 
-    def import_words_from_file(self):
+    def import_words_from_file(self) -> None:
+        """
+        Prompts a user to pick a file with words to import, if the choice fails it shows an appropriate message box
+        """
         try:
             file_dialog = QFileDialog(self.window)
             file_dialog.setNameFilter("Text Files (*.txt);;All Files (*)")
@@ -79,7 +103,10 @@ class WordleSolver:
             QMessageBox.information(self.current_game, "Invalid file format",
                                     "File format is invalid (it should only contain 5-letter words on each line")
 
-    def setup_ui(self):
+    def setup_ui(self) -> None:
+        """
+        Sets up graphical user interface widgets and their layout, must be executed after initializing WordleSolver
+        """
         self.window.setWindowTitle("Wordle Solver")
 
         reset_button = QPushButton("Reset")
